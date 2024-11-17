@@ -1,8 +1,8 @@
 package com.kaizenflow.weatherbridge.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record WeatherDayResponse(
         @JsonProperty("datetime") String datetime,
@@ -45,6 +45,4 @@ public record WeatherDayResponse(
         @JsonProperty("precipsum") Double precipsum,
         @JsonProperty("precipsumnormal") Double precipsumnormal,
         @JsonProperty("snowsum") Double snowsum,
-        @JsonProperty("datetimeInstance") String datetimeInstance
-) {
-}
+        @JsonProperty("datetimeInstance") String datetimeInstance) {}

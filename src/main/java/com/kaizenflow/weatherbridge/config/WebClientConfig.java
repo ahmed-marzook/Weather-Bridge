@@ -9,11 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
-  @Bean
-  public WebClient webClient() {
-    return WebClient.builder()
-            .baseUrl("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline")
-        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .build();
-  }
+    @Bean
+    public WebClient webClient() {
+        return WebClient.builder()
+                .baseUrl(
+                        "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .build();
+    }
 }

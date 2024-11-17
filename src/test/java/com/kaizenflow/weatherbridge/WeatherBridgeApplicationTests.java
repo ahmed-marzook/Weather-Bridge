@@ -9,6 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class WeatherBridgeApplicationTests {
 
-  @Test
-  void contextLoads() {}
+    @Test
+    void contextLoads() {}
 }

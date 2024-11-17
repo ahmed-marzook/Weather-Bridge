@@ -1,8 +1,8 @@
 package com.kaizenflow.weatherbridge.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record WeatherResponse(
         @JsonProperty("queryCost") Integer queryCost,
@@ -13,5 +13,4 @@ public record WeatherResponse(
         @JsonProperty("timezone") String timezone,
         @JsonProperty("tzoffset") Integer tzoffset,
         @JsonProperty("description") String description,
-        @JsonProperty("days") List<WeatherDayResponse> days
-) {}
+        @JsonProperty("days") List<WeatherDayResponse> days) {}

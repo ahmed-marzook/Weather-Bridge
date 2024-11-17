@@ -41,6 +41,7 @@ spotless {
 
 		// Cleanup empty lines
 		trimTrailingWhitespace()
+		indentWithTabs(2)
 		indentWithSpaces(4)
 		endWithNewline()
 
