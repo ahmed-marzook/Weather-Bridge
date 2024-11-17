@@ -21,6 +21,6 @@ public class WeatherBridgeApplication implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    weatherAPIService.getWeatherForCity();
+    weatherAPIService.getWeatherForCity("Crawley");
   }
 }

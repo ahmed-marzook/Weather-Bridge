@@ -13,5 +13,5 @@ public record WeatherResponse(
         @JsonProperty("timezone") String timezone,
         @JsonProperty("tzoffset") Integer tzoffset,
         @JsonProperty("description") String description,
-        @JsonProperty("days") List<Day> days
+        @JsonProperty("days") List<WeatherDayResponse> days
 ) {}
