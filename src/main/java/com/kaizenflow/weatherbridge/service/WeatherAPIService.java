@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -24,8 +25,8 @@ public class WeatherAPIService {
     this.apiKey = apiKey;
   }
 
-  public void getWeatherForCity(String location) {
-      webClient.get()
+  public WeatherResponse getWeatherForCity(String location) {
+      return webClient.get()
               .uri(uriBuilder -> uriBuilder
                       .path("/{area}")
                       .queryParam("unitGroup", "metric")
@@ -35,16 +36,15 @@ public class WeatherAPIService {
                       .build(location))
               .retrieve()
               .bodyToMono(WeatherResponse.class)
-              .doOnError(error -> {
-                  System.err.println("Error fetching weather data: " + error.getMessage());
+              .doFirst(() -> {
+                  System.out.println("Fetching weather data for: " + location);
               })
-              .onErrorResume(error -> Mono.empty())
-              .subscribe(response -> {
-                  if (response != null && !response.days().isEmpty()) {
-                      System.out.println("Location: " + response.resolvedAddress());
-                      WeatherDayResponse today = response.days().get(0);
-                      System.out.println("Temperature: " + today.temp());
-                  }
-              });
+              .doOnError(WebClientResponseException.class, error -> {
+                  System.err.println("API Error: " + error.getStatusCode() + " - " + error.getMessage());
+              })
+              .onErrorResume(error -> {
+                  System.err.println("Error occurred: " + error.getMessage());
+                  return Mono.empty();
+              }).block();
   }
 }
