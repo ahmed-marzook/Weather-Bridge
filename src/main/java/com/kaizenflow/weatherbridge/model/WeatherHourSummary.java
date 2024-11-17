@@ -1,6 +1,3 @@
 package com.kaizenflow.weatherbridge.model;
 
-public record WeatherHourSummary(String time,
-                                Double temperature,
-                                String conditions) {
-}
+public record WeatherHourSummary(String time, Double temperature, String conditions) {}

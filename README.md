@@ -6,6 +6,7 @@ A modern Weather API wrapper service providing seamless access to weather data t
 
 - Java 21
 - Spring Boot
+- Redis
 - Gradle
 - React Frontend
 
