@@ -1,7 +1,8 @@
-import { useRef, useState, useEffect, useCallback } from "react";
 import axios, { isCancel } from "axios";
 
-function useWeatherApi() {
+import { useCallback, useEffect, useRef, useState } from "react";
+
+function useWeatherApi(location) {
     const [error, setError] = useState(null); // Stores any API errors
     const [isLoading, setIsLoading] = useState(true); // Tracks loading state
     const [currentWeather, setCurrentWeather] = useState('');
@@ -17,7 +18,7 @@ function useWeatherApi() {
 
         try {
             setIsLoading(true);
-            const response = await axios.get("http://localhost:8080/api/weather/Crawley", {
+            const response = await axios.get(`http://localhost:8080/api/weather/${location}`, {
                 signal: abortControllerRef.current.signal,
             });
             setCurrentWeather(response.data);

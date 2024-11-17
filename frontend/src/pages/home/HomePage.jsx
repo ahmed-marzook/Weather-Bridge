@@ -1,52 +1,46 @@
+import { useState } from "react";
+import Weather from "../../components/weather/Weather";
 import "./HomePage.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import useWeatherApi from "../../api/useWeatherApi";
 
 function Home() {
-  const { currentWeather, isLoading, error } = useWeatherApi();
-  const month = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const currentDate = new Date();
+  const [formData, setFormData] = useState({
+    location: "",
+  });
+  const [currentLocation, setCurrentLocation] = useState("Slough");
+  function handleSubmit(e) {
+    e.preventDefault();
+    setCurrentLocation(formData.location);
+    setFormData({ location: "" });
+  }
 
+  function handleChange(e) {
+    const { name, value } = e.target;
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }
   return (
-    <div className="weather-card">
-      <div className="location">
-        <FontAwesomeIcon className="location-icon" icon={faLocationDot} />
-        <span className="city">Crawley, UK</span>
-      </div>
-      <div className="weather-info">
-        <div className="temperature">
-          {currentWeather.temperature}
-          <sup>°C</sup>
+    <div>
+      <form onSubmit={handleSubmit} className="weather-form">
+        <div className="input-wrapper">
+          <input
+            className="location-search"
+            id="location"
+            name="location"
+            value={formData.location}
+            type="text"
+            placeholder="Enter location..."
+            onChange={handleChange}
+            autoComplete="off"
+          />
         </div>
-        <div className="time-date">
-          <div className="time">
-            {currentDate.toLocaleTimeString("en-UK", {
-              hour: "numeric",
-              minute: "numeric",
-              hour12: true,
-            })}
-          </div>
-          <div className="date">
-            {weekday[currentDate.getDay()]}, {month[currentDate.getMonth()]}{" "}
-            {currentDate.getDate()}
-          </div>
-        </div>
-      </div>
+        <button type="submit" className="submit-button">
+          Search
+        </button>
+      </form>
+      <Weather key={currentLocation} location={currentLocation} />
     </div>
   );
 }
