@@ -1,5 +1,6 @@
 package com.kaizenflow.weatherbridge.controller;
 
+import com.kaizenflow.weatherbridge.model.WeatherSummary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class WeatherController {
     }
 
     @GetMapping("/{location}")
-    public ResponseEntity<WeatherResponse> getWeatherForLocation(
+    public ResponseEntity<WeatherSummary> getWeatherForLocation(
             @PathVariable("location") String location) {
-        return new ResponseEntity<>(weatherService.getWeatherData(location), HttpStatus.OK);
+        return new ResponseEntity<>(WeatherSummary.fromDay(weatherService.getWeatherData(location).days().getFirst()), HttpStatus.OK);
     }
 }
