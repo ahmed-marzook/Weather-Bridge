@@ -12,6 +12,7 @@ function capitalizeFirstLetter(string) {
 function Weather(props) {
   const { currentWeather, isLoading, error } = useWeatherApi(props.location);
   const currentMoment = moment();
+  const weatherIcon = new Map();
 
   return (
     <div className="weather-card">
