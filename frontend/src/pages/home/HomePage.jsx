@@ -6,10 +6,14 @@ function Home() {
   const [formData, setFormData] = useState({
     location: "",
   });
-  const [currentLocation, setCurrentLocation] = useState("Slough");
+  const [currentLocation, setCurrentLocation] = useState("");
+
   function handleSubmit(e) {
     e.preventDefault();
-    setCurrentLocation(formData.location);
+    const payload = {
+      ...formData,
+    };
+    setCurrentLocation(payload.location);
     setFormData({ location: "" });
   }
 
@@ -40,7 +44,10 @@ function Home() {
           Search
         </button>
       </form>
-      <Weather key={currentLocation} location={currentLocation} />
+
+      {currentLocation && (
+        <Weather key={currentLocation} location={currentLocation} />
+      )}
     </div>
   );
 }

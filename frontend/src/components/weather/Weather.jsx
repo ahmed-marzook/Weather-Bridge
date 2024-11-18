@@ -12,7 +12,26 @@ function capitalizeFirstLetter(string) {
 function Weather(props) {
   const { currentWeather, isLoading, error } = useWeatherApi(props.location);
   const currentMoment = moment();
-  const weatherIcon = new Map();
+
+  if (error) {
+    return (
+      <div className="weather-card error">
+        <div className="error-message">
+          {error.response?.status === 404
+            ? `Location "${location}" not found`
+            : "Failed to fetch weather data. Please try again."}
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="weather-card loading">
+        <div className="loading-message">Loading weather data...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="weather-card">
