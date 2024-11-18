@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kaizenflow.weatherbridge.exception.WeatherApiException;
 import com.kaizenflow.weatherbridge.model.WeatherSummary;
 import com.kaizenflow.weatherbridge.service.WeatherService;
 
@@ -24,7 +25,7 @@ public class WeatherController {
 
     @GetMapping("/{location}")
     public ResponseEntity<WeatherSummary> getWeatherForLocation(
-            @PathVariable("location") String location) {
+            @PathVariable("location") String location) throws WeatherApiException {
         return new ResponseEntity<>(
                 WeatherSummary.fromDay(weatherService.getWeatherData(location).days().getFirst()),
                 HttpStatus.OK);

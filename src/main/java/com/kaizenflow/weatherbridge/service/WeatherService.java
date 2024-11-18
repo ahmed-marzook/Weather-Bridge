@@ -5,6 +5,7 @@ import java.time.Duration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import com.kaizenflow.weatherbridge.exception.WeatherApiException;
 import com.kaizenflow.weatherbridge.model.WeatherResponse;
 
 @Service
@@ -21,7 +22,7 @@ public class WeatherService {
         this.weatherRedisTemplate = weatherRedisTemplate;
     }
 
-    public WeatherResponse getWeatherData(String location) {
+    public WeatherResponse getWeatherData(String location) throws WeatherApiException {
         WeatherResponse cachedWeather = weatherRedisTemplate.opsForValue().get(location);
         if (cachedWeather != null) {
             return cachedWeather;

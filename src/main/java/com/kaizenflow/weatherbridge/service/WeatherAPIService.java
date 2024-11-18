@@ -5,11 +5,12 @@ package com.kaizenflow.weatherbridge.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import com.kaizenflow.weatherbridge.exception.WeatherApiException;
 import com.kaizenflow.weatherbridge.model.WeatherResponse;
 
 import reactor.core.publisher.Mono;
@@ -21,52 +22,46 @@ public class WeatherAPIService {
 
     private final WebClient webClient;
 
-    private final RedisTemplate<String, WeatherResponse> weatherRedisTemplate;
-
     @Autowired
     public WeatherAPIService(
-            WebClient webClient,
-            @Value("${visual.crossing.api.key}") String apiKey,
-            RedisTemplate<String, WeatherResponse> weatherRedisTemplate) {
+            WebClient webClient, @Value("${visual.crossing.api.key}") String apiKey) {
         this.webClient = webClient;
         this.apiKey = apiKey;
-        this.weatherRedisTemplate = weatherRedisTemplate;
     }
 
-    public WeatherResponse fetchWeatherFromApi(String location) {
-        WeatherResponse weatherResponse =
-                webClient
-                        .get()
-                        .uri(
-                                uriBuilder ->
-                                        uriBuilder
-                                                .path("/{area}")
-                                                .queryParam("unitGroup", "metric")
-                                                .queryParam("include", "days,fcst,hours")
-                                                .queryParam("iconSet","icon2")
-                                                .queryParam("key", apiKey)
-                                                .queryParam("contentType", "json")
-                                                .build(location))
-                        .retrieve()
-                        .bodyToMono(WeatherResponse.class)
-                        .doFirst(
-                                () -> {
-                                    System.out.println("Fetching weather data for: " + location);
-                                })
-                        .doOnError(
-                                WebClientResponseException.class,
-                                error -> {
-                                    System.err.println(
-                                            "API Error: " + error.getStatusCode() + " - " + error.getMessage());
-                                })
-                        .onErrorResume(
-                                error -> {
-                                    System.err.println("Error occurred: " + error.getMessage());
-                                    return Mono.empty();
-                                })
-                        .block();
-        weatherRedisTemplate.opsForValue().set(location, weatherResponse);
-        weatherRedisTemplate.hasKey(location);
+    public WeatherResponse fetchWeatherFromApi(String location) throws WeatherApiException {
+        WeatherResponse weatherResponse;
+        try {
+            weatherResponse =
+                    webClient
+                            .get()
+                            .uri(
+                                    uriBuilder ->
+                                            uriBuilder
+                                                    .path("/{area}")
+                                                    .queryParam("unitGroup", "metric")
+                                                    .queryParam("include", "days,fcst,hours")
+                                                    .queryParam("iconSet", "icon2")
+                                                    .queryParam("key", apiKey)
+                                                    .queryParam("contentType", "json")
+                                                    .build(location))
+                            .retrieve()
+                            .onStatus(
+                                    HttpStatusCode::is4xxClientError,
+                                    response ->
+                                            response
+                                                    .bodyToMono(String.class)
+                                                    .flatMap(body -> Mono.error(new IllegalArgumentException(body))))
+                            .onStatus(
+                                    HttpStatusCode::is5xxServerError,
+                                    response -> Mono.error(new RuntimeException("Weather API server error")))
+                            .bodyToMono(WeatherResponse.class)
+                            .block();
+        } catch (IllegalArgumentException e) {
+            throw new WeatherApiException(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            throw new WeatherApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return weatherResponse;
     }
 }
