@@ -40,15 +40,19 @@ public class WeatherAPIService {
                     webClient
                             .get()
                             .uri(
-                                    uriBuilder ->
-                                            uriBuilder
-                                                    .path("/{area}")
-                                                    .queryParam("unitGroup", "metric")
-                                                    .queryParam("include", "days,fcst,hours")
-                                                    .queryParam("iconSet", "icon2")
-                                                    .queryParam("key", apiKey)
-                                                    .queryParam("contentType", "json")
-                                                    .build(location))
+                                    uriBuilder -> {
+                                        var uri =
+                                                uriBuilder
+                                                        .path("/{area}")
+                                                        .queryParam("unitGroup", "metric")
+                                                        .queryParam("include", "days,hours")
+                                                        .queryParam("iconSet", "icons2")
+                                                        .queryParam("key", apiKey)
+                                                        .queryParam("contentType", "json")
+                                                        .build(location);
+                                        log.debug("Request URI: {}", maskApiKeyInUri(uri.toString()));
+                                        return uri;
+                                    })
                             .retrieve()
                             .onStatus(
                                     HttpStatusCode::is4xxClientError,
@@ -60,14 +64,28 @@ public class WeatherAPIService {
                                     HttpStatusCode::is5xxServerError,
                                     response -> Mono.error(new RuntimeException("Weather API server error")))
                             .bodyToMono(WeatherResponse.class)
+                            .doOnSuccess(response -> logSuccessfulResponse(response, location))
                             .block();
         } catch (IllegalArgumentException e) {
-            log.debug("error", e);
+            log.error(
+                    "Client error while fetching weather data for location {}: {}", location, e.getMessage());
+            log.debug("Detailed client error:", e);
             throw new WeatherApiException(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
-            log.debug("error", e);
+            log.error(
+                    "Server error while fetching weather data for location {}: {}", location, e.getMessage());
+            log.debug("Detailed server error:", e);
             throw new WeatherApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return weatherResponse;
+    }
+
+    private void logSuccessfulResponse(WeatherResponse response, String location) {
+        log.info("Successfully retrieved weather data for location: {}", location);
+        log.debug("Raw API response for location {}: {}", location, response);
+    }
+
+    private String maskApiKeyInUri(String uri) {
+        return uri.replaceAll("key=[^&]+", "key=********");
     }
 }
