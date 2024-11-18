@@ -43,6 +43,7 @@ public class WeatherAPIService {
                                                 .path("/{area}")
                                                 .queryParam("unitGroup", "metric")
                                                 .queryParam("include", "days,fcst,hours")
+                                                .queryParam("iconSet","icon2")
                                                 .queryParam("key", apiKey)
                                                 .queryParam("contentType", "json")
                                                 .build(location))
