@@ -3,6 +3,8 @@
  */
 package com.kaizenflow.weatherbridge.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,8 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class WeatherAPIService {
+
+    private static final Logger log = LoggerFactory.getLogger(WeatherAPIService.class);
 
     private final String apiKey;
 
@@ -58,8 +62,10 @@ public class WeatherAPIService {
                             .bodyToMono(WeatherResponse.class)
                             .block();
         } catch (IllegalArgumentException e) {
+            log.debug("error", e);
             throw new WeatherApiException(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
+            log.debug("error", e);
             throw new WeatherApiException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return weatherResponse;

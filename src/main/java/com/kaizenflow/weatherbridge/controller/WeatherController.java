@@ -27,7 +27,7 @@ public class WeatherController {
     public ResponseEntity<WeatherSummary> getWeatherForLocation(
             @PathVariable("location") String location) throws WeatherApiException {
         return new ResponseEntity<>(
-                WeatherSummary.fromDay(weatherService.getWeatherData(location).days().getFirst()),
+                WeatherSummary.fromDay(weatherService.getWeatherData(location.toLowerCase())),
                 HttpStatus.OK);
     }
 }

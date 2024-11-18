@@ -2,8 +2,11 @@ package com.kaizenflow.weatherbridge.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record WeatherDayResponse(
         @JsonProperty("datetime") String datetime,
         @JsonProperty("datetimeEpoch") Long datetimeEpoch,
@@ -39,7 +42,7 @@ public record WeatherDayResponse(
         @JsonProperty("conditions") String conditions,
         @JsonProperty("description") String description,
         @JsonProperty("icon") String icon,
-        @JsonProperty("stations") Object stations,
+        @JsonProperty("stations") JsonNode stations,
         @JsonProperty("source") String source,
         @JsonProperty("hours") List<WeatherHourResponse> hours,
         @JsonProperty("precipsum") Double precipsum,
