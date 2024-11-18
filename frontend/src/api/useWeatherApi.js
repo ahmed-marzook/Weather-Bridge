@@ -24,7 +24,6 @@ function useWeatherApi(location) {
     const getWeather = useCallback(async () => {
         // Reset error state at the start of each request
         setError(null);
-
         // Input validation - if location is empty or just whitespace, exit early
         if (!location.trim()) {
             setIsLoading(false);

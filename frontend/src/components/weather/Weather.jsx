@@ -4,14 +4,22 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import useWeatherApi from "../../api/useWeatherApi";
 import "./Weather.css";
+import { useEffect } from "react";
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
-function Weather(props) {
-  const { currentWeather, isLoading, error } = useWeatherApi(props.location);
+function Weather({ location, onLoaded }) {
+  const { currentWeather, isLoading, error } = useWeatherApi(location);
   const currentMoment = moment();
+
+  // Call onLoaded when loading state changes to false
+  useEffect(() => {
+    if (!isLoading && onLoaded) {
+      onLoaded();
+    }
+  }, [isLoading, onLoaded]);
 
   if (error) {
     return (
@@ -35,28 +43,33 @@ function Weather(props) {
 
   return (
     <div className="weather-card">
-      <div className="location">
-        <FontAwesomeIcon className="location-icon" icon={faLocationDot} />
-        <span className="city">
-          {capitalizeFirstLetter(props.location)}, UK
-        </span>
-      </div>
-      <div className="weather-info">
-        <div className="temperature">
-          {currentWeather.temperature}
-          <sup>°C</sup>
-        </div>
-        <div className="time-date">
-          <div className="time">{currentMoment.format("h:mma")}</div>
-          <div className="date">{currentMoment.format("ddd, MMM D")}</div>
-        </div>
-      </div>
+      {isLoading ? (
+        <div className="loading-message">Loading weather data...</div>
+      ) : (
+        <>
+          <div className="location">
+            <FontAwesomeIcon className="location-icon" icon={faLocationDot} />
+            <span className="city">{capitalizeFirstLetter(location)}, UK</span>
+          </div>
+          <div className="weather-info">
+            <div className="temperature">
+              {currentWeather.temperature}
+              <sup>°C</sup>
+            </div>
+            <div className="time-date">
+              <div className="time">{currentMoment.format("h:mma")}</div>
+              <div className="date">{currentMoment.format("ddd, MMM D")}</div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
 Weather.propTypes = {
   location: PropTypes.string.isRequired,
+  onLoaded: PropTypes.func,
 };
 
 export default Weather;

@@ -7,24 +7,31 @@ function Home() {
     location: "",
   });
   const [currentLocation, setCurrentLocation] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const payload = {
       ...formData,
     };
+    setIsLoading(true); // Start loading when form is submitted
     setCurrentLocation(payload.location);
     setFormData({ location: "" });
   }
 
   function handleChange(e) {
     const { name, value } = e.target;
-
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   }
+
+  // Callback function to handle when weather data is loaded
+  const handleWeatherLoaded = () => {
+    setIsLoading(false);
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="weather-form">
@@ -40,13 +47,17 @@ function Home() {
             autoComplete="off"
           />
         </div>
-        <button type="submit" className="submit-button">
-          Search
+        <button type="submit" className="submit-button" disabled={isLoading}>
+          {isLoading ? "Searching..." : "Search"}
         </button>
       </form>
 
       {currentLocation && (
-        <Weather key={currentLocation} location={currentLocation} />
+        <Weather
+          key={currentLocation}
+          location={currentLocation}
+          onLoaded={handleWeatherLoaded}
+        />
       )}
     </div>
   );
