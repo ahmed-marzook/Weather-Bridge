@@ -83,11 +83,7 @@ Swagger UI: `http://localhost:8080/swagger-ui.html`
 
 ### Available Endpoints
 
-- `/api/v1/current` - Get current weather
-- `/api/v1/forecast` - Get weather forecast
-- `/api/v1/historical` - Get historical weather data
-- `/api/v1/alerts` - Get weather alerts
-- `/api/v1/locations` - Manage location data
+- `/api/weather/{location}` - Get current weather for specified location
 
 ## Error Handling🚨
 
