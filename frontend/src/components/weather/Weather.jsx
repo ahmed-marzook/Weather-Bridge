@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import useWeatherApi from "../../api/useWeatherApi";
 import "./Weather.css";
 import { useEffect } from "react";
+import weatherIconsMap from "./weatherIconMap";
 
 const getLocation = (locationStr) => {
   if (!locationStr) {
@@ -23,6 +24,11 @@ const getLocation = (locationStr) => {
 function Weather({ location, onLoaded }) {
   const { currentWeather, isLoading, error } = useWeatherApi(location);
   const currentMoment = moment();
+
+  const getWeatherIcon = () => {
+    const weatherType = currentWeather?.icon;
+    return weatherIconsMap[weatherType]?.icon || weatherIconsMap["cloudy"].icon;
+  };
 
   // Call onLoaded when loading state changes to false
   useEffect(() => {
@@ -44,7 +50,10 @@ function Weather({ location, onLoaded }) {
   }
 
   return (
-    <div className="weather-card">
+    <div
+      className="weather-card"
+      style={{ "--weather-icon": `url(${getWeatherIcon()})` }}
+    >
       {isLoading ? (
         <div className="loading-message">Loading weather data...</div>
       ) : (

@@ -5,6 +5,31 @@
   width: 100%;
   max-width: 400px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden; /* Contains the pseudo-element */
+}
+
+/* Add the SVG as a pseudo-element */
+.weather-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 70%; /* Adjust size as needed */
+  height: 100%;
+  background-image: var(--weather-icon);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right center;
+  opacity: 0.15; /* Adjust opacity as needed */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Ensure content stays above the SVG background */
+.weather-card > * {
+  position: relative;
+  z-index: 2;
 }
 
 .location {
