@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import weatherIconsMap from "../weather/weatherIconMap";
+import "./HourForecast.css";
 
 HourForecast.propTypes = {
   temp: PropTypes.number.isRequired,
@@ -19,7 +20,7 @@ function HourForecast({ temp, time, icon }) {
     <div className="hour-forecast">
       <div className="hour-time">{time}</div>
       <img src={iconUrl} alt="weather icon" className="icon-space" />
-      <div>
+      <div className="hour-temperature">
         {temp} <sup>°C</sup>
       </div>
     </div>

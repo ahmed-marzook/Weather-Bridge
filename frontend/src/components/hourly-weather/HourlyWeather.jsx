@@ -32,7 +32,7 @@ function HourlyWeather({ hoursList }) {
   const visibleHours = hoursList.slice(startIndex, startIndex + itemsToShow);
 
   return (
-    <div className="container">
+    <div className="container-hourly">
       <button
         className="arrow arrow-left"
         onClick={handlePrev}
