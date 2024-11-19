@@ -31,8 +31,6 @@ VISUAL_CROSSING_API_KEY=*******
 
 ### Backend Setup
 
-Clone and setup:
-
 ```bash
 git clone git@github.com:your-username/weather-bridge.git
 cd weather-bridge
@@ -49,8 +47,8 @@ npm install
 npm run dev
 ```
 
-Server runs on `http://localhost:8080`
-Frontend runs on `http://localhost:5173/`
+- Server runs on `http://localhost:8080`
+- Frontend runs on `http://localhost:5173/`
 
 ## Project Structure🏗️
 
@@ -76,6 +74,7 @@ WEATHERBRIDGE/
 
 - Real-time weather data access
 - Caching
+- Easy to use UI
 - Detailed weather metrics
 
 ## API Documentation📖
