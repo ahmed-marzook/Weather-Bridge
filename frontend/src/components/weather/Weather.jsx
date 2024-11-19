@@ -6,6 +6,7 @@ import useWeatherApi from "../../api/useWeatherApi";
 import "./Weather.css";
 import { useEffect } from "react";
 import weatherIconsMap from "./weatherIconMap";
+import HourlyWeather from "../hourly-weather/HourlyWeather";
 
 const getLocation = (locationStr) => {
   if (!locationStr) {
@@ -50,31 +51,38 @@ function Weather({ location, onLoaded }) {
   }
 
   return (
-    <div
-      className="weather-card"
-      style={{ "--weather-icon": `url(${getWeatherIcon()})` }}
-    >
-      {isLoading ? (
-        <div className="loading-message">Loading weather data...</div>
-      ) : (
-        <>
-          <div className="location">
-            <FontAwesomeIcon className="location-icon" icon={faLocationDot} />
-            <>{getLocation(currentWeather.location)}</>
-          </div>
-          <div className="weather-info">
-            <div className="temperature">
-              {currentWeather.temperature}
-              <sup>°C</sup>
+    <>
+      <div
+        className="weather-card"
+        style={{ "--weather-icon": `url(${getWeatherIcon()})` }}
+      >
+        {isLoading ? (
+          <div className="loading-message">Loading weather data...</div>
+        ) : (
+          <>
+            <div className="location">
+              <FontAwesomeIcon className="location-icon" icon={faLocationDot} />
+              {getLocation(currentWeather.location)}
             </div>
-            <div className="time-date">
-              <div className="time">{currentMoment.format("h:mma")}</div>
-              <div className="date">{currentMoment.format("ddd, MMM D")}</div>
+            <div className="weather-info">
+              <div className="temperature">
+                {currentWeather.temperature}
+                <sup>°C</sup>
+              </div>
+              <div className="time-date">
+                <div className="time">{currentMoment.format("h:mma")}</div>
+                <div className="date">{currentMoment.format("ddd, MMM D")}</div>
+              </div>
             </div>
-          </div>
-        </>
-      )}
-    </div>
+          </>
+        )}
+      </div>
+      <HourlyWeather
+        hoursList={
+          currentWeather.hourlyForecast ? currentWeather.hourlyForecast : []
+        }
+      />
+    </>
   );
 }
 

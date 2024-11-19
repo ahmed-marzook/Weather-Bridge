@@ -78,3 +78,13 @@ body {
   transform: translateY(-50%);
   color: #9ca3af;
 }
+
+.heading {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.heading h1 {
+  margin: 0;
+}

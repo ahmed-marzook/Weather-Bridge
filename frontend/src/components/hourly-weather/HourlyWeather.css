@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  align-items: stretch;
+  max-width: 900px;
+  margin: 20px 0px;
+}
+
+.arrow {
+  cursor: pointer;
+  background: white;
+  border: none;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.arrow:hover {
+  background: #f0f0f0;
+}
+
+.arrow-left {
+  border-radius: 8px 0 0 8px;
+}
+
+.arrow-right {
+  border-radius: 0 8px 8px 0;
+}
+
+.hour-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 20px;
+  background: #f5f5f5;
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .hour-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

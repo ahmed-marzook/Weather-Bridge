@@ -3,7 +3,6 @@
   border-radius: 20px;
   padding: 2rem;
   width: 100%;
-  max-width: 400px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden; /* Contains the pseudo-element */

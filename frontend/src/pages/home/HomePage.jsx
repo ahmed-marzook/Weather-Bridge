@@ -34,6 +34,11 @@ function Home() {
 
   return (
     <div>
+      <div className="heading">
+        <h1 className="heading-title">Weather Wrapper</h1>
+        <span>Showing the current weather on Earth</span>
+      </div>
+
       <form onSubmit={handleSubmit} className="weather-form">
         <div className="input-wrapper">
           <input
