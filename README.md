@@ -108,6 +108,70 @@ Run tests with:
 ./gradlew test
 ```
 
+## Future Features
+
+### User Sign Up and Login
+
+- Implement secure user authentication system
+- Enable email and social media login options
+- Create user profile management
+- Store user preferences and settings securely
+- Password recovery and reset functionality
+
+### Set and Manage Locations
+
+- Add multiple location tracking
+- Save favorite/frequent locations
+- Enable location detection via GPS
+- Custom naming for saved locations
+- Location sharing capabilities
+- History of previously tracked locations
+- Autocomplete search functionality for locations
+- Support for international location search
+- Quick access to recently searched locations
+
+### Historical Weather Data
+
+- Access detailed historical weather records
+- View weather patterns over custom date ranges
+- Compare historical weather trends
+- Download historical weather reports
+- Analyze seasonal weather patterns
+- View historical extreme weather events
+- Generate historical weather graphs and charts
+
+### Extended Forecast Features
+
+- Long-range weather predictions (up to 14 days)
+- Detailed hourly forecasts
+- Weather trend analysis and predictions
+- Seasonal forecasting
+- Custom forecast period selection
+- Weather pattern visualization
+- Forecast accuracy tracking
+- Agricultural forecast features
+
+### Receive Weather Alerts
+
+- Customizable weather alert notifications
+- Real-time severe weather warnings
+- Push notifications for weather changes
+- Email alerts for severe conditions
+- Custom alert thresholds
+- Daily weather summaries
+- Storm tracking notifications
+
+### Customize Preferences
+
+- Personalized weather display units (°F/°C)
+- Custom notification settings
+- Dashboard layout customization
+- Preferred weather data sources
+- Alert frequency preferences
+- Language preferences
+- Display theme options (light/dark mode)
+- Custom weather parameters to track
+
 ## License📄
 
 MIT License - see LICENSE.md
