@@ -1,8 +1,8 @@
 # WeatherBridge API🌤️
 
-A modern Weather API wrapper service providing seamless access to weather data through a unified interface. WeatherBridge acts as an elegant connector between your applications and various weather data providers.
+A modern Weather API wrapper service providing seamless access to weather data through a unified interface. WeatherBridge acts as an elegant connector between your applications and weather data providers.
 
-**Project to learn how to use Redis and call external APIs using Spring WebClient.**
+**Project to learn how to use Redis and call external APIs using Spring WebClient. Using [Visual Crossing API](https://www.visualcrossing.com/)**
 
 ## Technology Stack🛠️
 
