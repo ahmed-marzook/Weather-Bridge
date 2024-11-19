@@ -6,9 +6,19 @@ import useWeatherApi from "../../api/useWeatherApi";
 import "./Weather.css";
 import { useEffect } from "react";
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-}
+const getLocation = (locationStr) => {
+  if (!locationStr) {
+    return <div>No location data available</div>;
+  }
+
+  const [city, , country] = locationStr.split(",").map((item) => item.trim());
+
+  return (
+    <span className="city">
+      {city}, {country}
+    </span>
+  );
+};
 
 function Weather({ location, onLoaded }) {
   const { currentWeather, isLoading, error } = useWeatherApi(location);
@@ -33,14 +43,6 @@ function Weather({ location, onLoaded }) {
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className="weather-card loading">
-        <div className="loading-message">Loading weather data...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="weather-card">
       {isLoading ? (
@@ -49,7 +51,7 @@ function Weather({ location, onLoaded }) {
         <>
           <div className="location">
             <FontAwesomeIcon className="location-icon" icon={faLocationDot} />
-            <span className="city">{capitalizeFirstLetter(location)}, UK</span>
+            <>{getLocation(currentWeather.location)}</>
           </div>
           <div className="weather-info">
             <div className="temperature">
