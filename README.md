@@ -2,6 +2,8 @@
 
 A modern Weather API wrapper service providing seamless access to weather data through a unified interface. WeatherBridge acts as an elegant connector between your applications and various weather data providers.
 
+**Project to learn how to use Redis and call external APIs using Spring WebClient.**
+
 ## Technology Stack🛠️
 
 - Java 21
@@ -16,20 +18,30 @@ Required installations:
 
 - JDK 21
 - Gradle 8.x
+- Node v22.9.0
 - Docker
 
 ## Getting Started🚀
+
+### Environment Variables🔑
+
+```env
+VISUAL_CROSSING_API_KEY=*******
+```
+
+### Backend Setup
 
 Clone and setup:
 
 ```bash
 git clone git@github.com:your-username/weather-bridge.git
 cd weather-bridge
+docker-compose up -d
 ./gradlew build
 ./gradlew bootRun
 ```
 
-Frontend setup:
+### Frontend setup
 
 ```bash
 cd frontend
@@ -38,7 +50,7 @@ npm run dev
 ```
 
 Server runs on `http://localhost:8080`
-Frontend runs on `http://localhost:3000`
+Frontend runs on `http://localhost:5173/`
 
 ## Project Structure🏗️
 
@@ -52,26 +64,19 @@ WEATHERBRIDGE/
 ├── frontend/
 ├── gradle/
 ├── src/
-├── build.gradle.kts
+├── build.gradle
 ├── docker-compose.yml
 ├── gradlew
 ├── gradlew.bat
 ├── README.md
-└── settings.gradle.kts
+└── settings.gradle
 ```
 
 ## Features✨
 
 - Real-time weather data access
-- Multiple weather provider integration
-- Rate limiting and caching
+- Caching
 - Detailed weather metrics
-- Historical weather data
-- Weather alerts and notifications
-- Geolocation support
-- Customizable data formats
-- Batch request processing
-- Comprehensive error handling
 
 ## API Documentation📖
 
@@ -84,15 +89,6 @@ Swagger UI: `http://localhost:8080/swagger-ui.html`
 - `/api/v1/historical` - Get historical weather data
 - `/api/v1/alerts` - Get weather alerts
 - `/api/v1/locations` - Manage location data
-
-## Environment Variables🔑
-
-```
-WEATHER_API_KEY=your_api_key
-DATABASE_URL=your_db_url
-REDIS_URL=your_redis_url
-PORT=8080
-```
 
 ## Error Handling🚨
 
