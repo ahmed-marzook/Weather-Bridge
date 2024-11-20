@@ -2,6 +2,8 @@ import axios, { isCancel } from "axios";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 /**
  * Custom hook to fetch weather data for a given location
  * @param {string} location - The location to fetch weather data for
@@ -45,7 +47,7 @@ function useWeatherApi(location) {
 
             // Make the API request with abort signal attached
             const response = await axios.get(
-                `http://localhost:8080/api/weather/${location}`,
+                `${API_URL}/api/weather/${location}`,
                 {
                     signal: abortControllerRef.current.signal,
                 }
