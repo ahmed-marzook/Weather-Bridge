@@ -15,7 +15,10 @@ public record WeatherSummary(
         WeatherDayResponse day = weatherResponse.days().getFirst();
         List<WeatherHourSummary> hourSummaries =
                 day.hours().stream()
-                        .map(hour -> new WeatherHourSummary(hour.datetime(), hour.temp(), hour.conditions(), hour.icon()))
+                        .map(
+                                hour ->
+                                        new WeatherHourSummary(
+                                                hour.datetime(), hour.temp(), hour.conditions(), hour.icon()))
                         .collect(Collectors.toList());
 
         return new WeatherSummary(
