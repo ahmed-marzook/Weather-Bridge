@@ -172,6 +172,14 @@ Run tests with:
 - Display theme options (light/dark mode)
 - Custom weather parameters to track
 
+## Docker Image Build Commands
+
+```bash
+docker build -t kaizenflow/weather-bridge:1.0 .
+docker run -e VISUAL_CROSSING_API_KEY=********** -p 8080:8080 kaizenflow/weather-bridge:1.0
+docker push kaizenflow/weather-bridge:1.0
+```
+
 ## License📄
 
 MIT License - see LICENSE.md

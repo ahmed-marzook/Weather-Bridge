@@ -35,7 +35,7 @@ function Home() {
   return (
     <div>
       <div className="heading">
-        <h1 className="heading-title">Weather Wrapper</h1>
+        <h1 className="heading-title">Weather Bridge</h1>
         <span>Showing the current weather on Earth</span>
       </div>
 
