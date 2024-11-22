@@ -44,10 +44,17 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Build the Docker image
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag kaizenflow/weather-bridge:${{ env.version }}
+      # Build and tag the Docker image with both version and latest tags
+      - name: Build and tag the Docker image
+        run: |
+          docker build . --file Dockerfile \
+            --tag kaizenflow/weather-bridge:${{ env.version }} \
+            --tag kaizenflow/weather-bridge:latest
 
-      # Push the Docker image
-      - name: Push the Docker image
+      # Push the Docker image with the version tag
+      - name: Push the versioned Docker image
         run: docker push kaizenflow/weather-bridge:${{ env.version }}
+
+      # Push the Docker image with the latest tag
+      - name: Push the latest Docker image
+        run: docker push kaizenflow/weather-bridge:latest
