@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -18,8 +18,8 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
 
       # Make Gradle wrapper executable
       - name: Grant execute permission for Gradle wrapper
@@ -58,3 +58,15 @@ jobs:
       # Push the Docker image with the latest tag
       - name: Push the latest Docker image
         run: docker push kaizenflow/weather-bridge-server:latest
+
+  #Deploy Application
+  deploy:
+    needs: build
+    runs-on: [aws-ec2-weather-bridge]
+    steps:
+      - name: Pull Image from docker hub
+        run: docker pull kaizenflow/weather-bridge-server:latest
+      - name: Delete Old container
+        run: docker rm -f weather-bridge-server
+      - name: Run docker container
+        run: docker run -d -p 80:8080 -e VISUAL_CROSSING_API_KEY=${{ secrets.VISUAL_CROSSING_API_KEY }} --name weather-bridge-server kaizenflow/weather-bridge-server:latest
