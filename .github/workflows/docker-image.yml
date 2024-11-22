@@ -33,7 +33,7 @@ jobs:
       - name: Extract version
         id: extract_version
         run: |
-          VERSION=$(grep '^version' build.gradle | sed 's/version[[:space:]]*=[[:space:]]*["'\'']//g')
+          VERSION=$(grep '^version' build.gradle | sed 's/version[[:space:]]*=[[:space:]]*["'\''']//g')
           echo "VERSION=$VERSION"
           echo "version=$VERSION" >> $GITHUB_ENV
 
