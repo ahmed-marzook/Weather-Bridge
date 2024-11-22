@@ -36,5 +36,5 @@ jobs:
 
       - name: Deploy to AWS S3
         working-directory: ./frontend
-        run: aws s3 sync build s3://weather-bridge-client --delete
+        run: aws s3 sync dist s3://weather-bridge-client --delete
       
