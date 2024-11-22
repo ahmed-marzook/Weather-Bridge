@@ -7,12 +7,24 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag kaizenflow/weather-bridge:$(date +%s)
+      # Checkout the code
+      - uses: actions/checkout@v4
+
+      # Set up JDK 21 for Gradle
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Build the JAR using Gradle
+      - name: Build JAR with Gradle
+        run: ./gradlew build
+
+      # Build the Docker image
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag kaizenflow/weather-bridge:$(date +%s)
