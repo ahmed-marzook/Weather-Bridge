@@ -180,6 +180,20 @@ docker run -e VISUAL_CROSSING_API_KEY=********** -p 8080:8080 kaizenflow/weather
 docker push kaizenflow/weather-bridge:1.0
 ```
 
+# Test development
+
+npm run dev
+
+# Test production locally
+
+npm run build
+npm run preview
+
+# Or use serve to test the production build
+
+npm install -g serve
+serve dist
+
 ## License📄
 
 MIT License - see LICENSE.md
