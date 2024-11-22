@@ -29,13 +29,13 @@ jobs:
       - name: Build JAR with Gradle
         run: ./gradlew build
 
-      # Generate a date-based version tag
-      - name: Generate date tag
-        id: generate_date
+      # Extract version from build.gradle
+      - name: Extract version
+        id: extract_version
         run: |
-          DATE_TAG=$(date +%s)
-          echo "DATE_TAG=$DATE_TAG"
-          echo "date_tag=$DATE_TAG" >> $GITHUB_ENV
+          VERSION=$(grep '^version' build.gradle | sed 's/version[[:space:]]*=[[:space:]]*["'\'']//g')
+          echo "VERSION=$VERSION"
+          echo "version=$VERSION" >> $GITHUB_ENV
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
@@ -46,8 +46,8 @@ jobs:
 
       # Build the Docker image
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag kaizenflow/weather-bridge:${{ env.date_tag }}
+        run: docker build . --file Dockerfile --tag kaizenflow/weather-bridge:${{ env.version }}
 
       # Push the Docker image
       - name: Push the Docker image
-        run: docker push kaizenflow/weather-bridge:${{ env.date_tag }}
+        run: docker push kaizenflow/weather-bridge:${{ env.version }}
