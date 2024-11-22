@@ -20,13 +20,23 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-        
+
+      # Make Gradle wrapper executable
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x ./gradlew
-        
+
       # Build the JAR using Gradle
       - name: Build JAR with Gradle
         run: ./gradlew build
+
+      # Generate a date-based version tag
+      - name: Generate date tag
+        id: generate_date
+        run: |
+          DATE_TAG=$(date +%s)
+          echo "DATE_TAG=$DATE_TAG"
+          echo "date_tag=$DATE_TAG" >> $GITHUB_ENV
+
       # Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -36,8 +46,8 @@ jobs:
 
       # Build the Docker image
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag kaizenflow/weather-bridge:$(date +%s)
-        
-       # Push the Docker image
+        run: docker build . --file Dockerfile --tag kaizenflow/weather-bridge:${{ env.date_tag }}
+
+      # Push the Docker image
       - name: Push the Docker image
-        run: docker push kaizenflow/weather-bridge:$(date +%s)
+        run: docker push kaizenflow/weather-bridge:${{ env.date_tag }}
