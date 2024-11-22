@@ -67,6 +67,6 @@ jobs:
       - name: Pull Image from docker hub
         run: docker pull kaizenflow/weather-bridge-server:latest
       - name: Delete Old container
-        run: docker rm -f weather-bridge-server
+        run: docker ps -q -f name=weather-bridge-server | xargs -r docker rm -f
       - name: Run docker container
         run: docker run -d -p 80:8080 -e VISUAL_CROSSING_API_KEY=${{ secrets.VISUAL_CROSSING_API_KEY }} --name weather-bridge-server kaizenflow/weather-bridge-server:latest
