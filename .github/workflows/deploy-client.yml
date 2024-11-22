@@ -2,9 +2,9 @@ name: Deploy client to AWS S3
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   deploy:
@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ var.NODE_VERSION }}
-          
+
       - name: Dependency Installation
         working-directory: ./frontend
         run: npm install
@@ -37,4 +37,3 @@ jobs:
       - name: Deploy to AWS S3
         working-directory: ./frontend
         run: aws s3 sync build s3://weather-bridge-client --delete
-      
