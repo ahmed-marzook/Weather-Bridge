@@ -62,7 +62,7 @@ jobs:
   #Deploy Application
   deploy:
     needs: build
-    runs-on: [aws-ec2-weather-bridge]
+    runs-on: aws-ec2-weather-bridge
     steps:
       - name: Pull Image from docker hub
         run: docker pull kaizenflow/weather-bridge-server:latest
