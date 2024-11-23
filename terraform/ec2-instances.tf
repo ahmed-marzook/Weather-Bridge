@@ -2,7 +2,7 @@ resource "aws_instance" "app_server" {
   ami           = var.instance_ami
   instance_type = var.instance_type
   subnet_id     = aws_subnet.public.id
-  key_name      = "weather-wrapper-pem-file"
+  key_name      = "weather-bridge"
 
   vpc_security_group_ids = [aws_security_group.weather_bridge_sg.id]
 
