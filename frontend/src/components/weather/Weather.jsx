@@ -31,7 +31,6 @@ function Weather({ location, onLoaded }) {
     return weatherIconsMap[weatherType]?.icon || weatherIconsMap["cloudy"].icon;
   };
 
-  // Call onLoaded when loading state changes to false
   useEffect(() => {
     if (!isLoading && onLoaded) {
       onLoaded();
@@ -52,10 +51,14 @@ function Weather({ location, onLoaded }) {
 
   return (
     <>
-      <div
-        className="weather-card"
-        style={{ "--weather-icon": `url(${getWeatherIcon()})` }}
-      >
+      <div className="weather-card">
+        {!isLoading && (
+          <img
+            src={getWeatherIcon()}
+            alt="weather icon"
+            className="weather-background-icon"
+          />
+        )}
         {isLoading ? (
           <div className="loading-message">Loading weather data...</div>
         ) : (
