@@ -1,4 +1,4 @@
-name: "Terraform"
+name: "Terraform Code to build IAC"
 
 on:
   push:
