@@ -13,12 +13,6 @@ resource "aws_instance" "app_server" {
               
               # Install base packages
               yum install -y ruby wget java-21-amazon-corretto
-
-              # Install CodeDeploy agent
-              wget https://aws-codedeploy-${var.aws_region}.s3.amazonaws.com/latest/install
-              chmod +x ./install
-              ./install auto
-              service codedeploy-agent start
  
               # Install Docker
               yum install -y docker

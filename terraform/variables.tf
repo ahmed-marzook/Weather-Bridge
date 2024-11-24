@@ -31,7 +31,7 @@ variable "key_pair_name" {
 
 variable "app_port" {
   description = "Application port"
-  default     = 8080
+  default     = 80
 }
 
 variable "ssh_cidr" {

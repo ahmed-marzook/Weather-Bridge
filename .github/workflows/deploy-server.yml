@@ -58,7 +58,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ steps.ec2-ip.outputs.instance_ip }}
-          username: ${{ secrets.EC2_USERNAME }}
+          username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # Pull the latest image
@@ -72,6 +72,6 @@ jobs:
             docker run -d \
               --name weather-bridge-server \
               -e VISUAL_CROSSING_API_KEY=${{ secrets.VISUAL_CROSSING_API_KEY }} \
-              -p 8080:8080 \
+              -p 80:8080 \
               --restart unless-stopped \
               kaizenflow/weather-bridge-server:latest
