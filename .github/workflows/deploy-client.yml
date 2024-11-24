@@ -1,0 +1,76 @@
+name: Deploy React App to S3
+
+on:
+  workflow_run:
+    workflows: ["Terraform Infrastructure"]
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  check-terraform-status:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Check Terraform workflow status
+        run: |
+          echo "Terraform workflow completed successfully"
+
+  build-and-deploy:
+    needs: check-terraform-status
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.9.0"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build React app
+        run: npm run build
+        env:
+          CI: false
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-2
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET_CLIENT }} --delete
+
+      - name: Find CloudFront distribution and invalidate cache
+        run: |
+          # Find distribution by Project and Environment tags
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?Tags.Items[?Key=='Environment' && Value=='production'] && Tags.Items[?Key=='Project' && Value=='weather-bridge']].Id" \
+            --output text)
+
+          if [ -n "$DISTRIBUTION_ID" ] && [ "$DISTRIBUTION_ID" != "None" ]; then
+            echo "Found CloudFront distribution: $DISTRIBUTION_ID"
+            aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+          else
+            echo "No CloudFront distribution found matching the following tags:"
+            echo "- Project: weather-bridge"
+            echo "- Environment: production"
+            exit 1
+          fi

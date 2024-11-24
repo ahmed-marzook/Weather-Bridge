@@ -1,4 +1,4 @@
-name: Build Weather Bridge Server Docker Image
+name: Weather Bridge Server Docker Image
 
 on:
   push:
