@@ -63,7 +63,7 @@ jobs:
         run: |
           # Find distribution by Project and Environment tags
           DISTRIBUTION_ID=$(aws cloudfront list-distributions \
-            --query "DistributionList.Items[?Tags.Items[?Key=='Environment' && Value=='production'] && Tags.Items[?Key=='Project' && Value=='weather-bridge']].Id" \
+            --query "DistributionList.Items[?Tags.Items[?Key=='Project' && Value=='weather-bridge']].Id" \
             --output text)
 
           if [ -n "$DISTRIBUTION_ID" ] && [ "$DISTRIBUTION_ID" != "None" ]; then
@@ -72,6 +72,5 @@ jobs:
           else
             echo "No CloudFront distribution found matching the following tags:"
             echo "- Project: weather-bridge"
-            echo "- Environment: production"
             exit 1
           fi
