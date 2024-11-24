@@ -1,0 +1,76 @@
+name: Deploy Server to EC2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  check-terraform-status:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Check Terraform workflow status
+        run: |
+          echo "Terraform workflow completed successfully"
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-2
+
+      - name: Get EC2 Instance IP
+        id: ec2-ip
+        run: |
+          INSTANCE_IP=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=weather-bridge-server" \
+                     "Name=tag:Environment,Values=production" \
+                     "Name=instance-state-name,Values=running" \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --output text)
+
+          if [ "$INSTANCE_IP" = "None" ] || [ -z "$INSTANCE_IP" ]; then
+            echo "No running instance found with specified tags"
+            exit 1
+          fi
+
+          echo "instance_ip=$INSTANCE_IP" >> $GITHUB_OUTPUT
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ steps.ec2-ip.outputs.instance_ip }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Pull the latest image
+            docker pull kaizenflow/weather-bridge-server:latest
+
+            # Stop and remove the old container if it exists
+            docker stop weather-bridge-server || true
+            docker rm weather-bridge-server || true
+
+            # Run the new container
+            docker run -d \
+              --name weather-bridge-server \
+              -e VISUAL_CROSSING_API_KEY=${{ secrets.VISUAL_CROSSING_API_KEY }} \
+              -p 8080:8080 \
+              --restart unless-stopped \
+              kaizenflow/weather-bridge-server:latest
