@@ -10,3 +10,13 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
+
+terraform {
+  backend "s3" {
+    bucket         = "my-terraform-state-bucket-ahmed-marzook"
+    key            = "weather-bridge-terraform.tfstate"
+    region         = "eu-west-2"
+    encrypt        = true
+    dynamodb_table = "terraform-state-locks"
+  }
+}
