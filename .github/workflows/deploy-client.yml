@@ -59,18 +59,37 @@ jobs:
         run: |
           aws s3 sync dist/ s3://${{ secrets.AWS_S3_BUCKET_CLIENT }} --delete
 
-      - name: Find CloudFront distribution and invalidate cache
-        run: |
-          # Find distribution by Project and Environment tags
-          DISTRIBUTION_ID=$(aws cloudfront list-distributions \
-            --query "DistributionList.Items[?Tags.Items[?Key=='Project' && Value=='weather-bridge']].Id" \
-            --output text)
+          - name: Find CloudFront distribution and invalidate cache
+          run: |
+            # List all distributions and their tags for debugging
+            echo "Listing all CloudFront distributions and their tags..."
+            aws cloudfront list-distributions --query "DistributionList.Items[*].{Id:Id, DomainName:Origins.Items[0].DomainName, Tags:Tags.Items[*]}" --output json
 
-          if [ -n "$DISTRIBUTION_ID" ] && [ "$DISTRIBUTION_ID" != "None" ]; then
-            echo "Found CloudFront distribution: $DISTRIBUTION_ID"
-            aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
-          else
-            echo "No CloudFront distribution found matching the following tags:"
-            echo "- Project: weather-bridge"
-            exit 1
-          fi
+            # Find distribution by Project and Environment tags
+            DISTRIBUTION_ID=$(aws cloudfront list-distributions \
+              --query "DistributionList.Items[?Tags.Items[?Key=='Project' && Value=='weather-bridge'] && Tags.Items[?Key=='Environment' && Value=='production']] | [0].Id" \
+              --output text)
+
+            # If not found, try finding by exact S3 origin domain
+            if [ -z "$DISTRIBUTION_ID" ] || [ "$DISTRIBUTION_ID" == "None" ]; then
+              echo "Distribution not found by tags, trying to find by S3 origin domain..."
+              DISTRIBUTION_ID=$(aws cloudfront list-distributions \
+                --query "DistributionList.Items[?Origins.Items[?DomainName=='${{ secrets.AWS_S3_BUCKET_CLIENT }}.s3.eu-west-2.amazonaws.com']] | [0].Id" \
+                --output text)
+            fi
+
+            if [ -n "$DISTRIBUTION_ID" ] && [ "$DISTRIBUTION_ID" != "None" ]; then
+              echo "Found CloudFront distribution: $DISTRIBUTION_ID"
+              aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+            else
+              echo "ERROR: No CloudFront distribution found!"
+              echo "Checked for:"
+              echo "- Project tag: weather-bridge"
+              echo "- Environment tag: production"
+              echo "- S3 origin domain: weather-bridge-client-production.s3.eu-west-2.amazonaws.com"
+              echo "Please verify that:"
+              echo "1. The CloudFront distribution exists"
+              echo "2. It has the correct Project and Environment tags"
+              echo "3. It's configured with the correct S3 bucket origin"
+              exit 1
+            fi
