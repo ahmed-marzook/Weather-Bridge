@@ -65,9 +65,8 @@ jobs:
           echo "Listing all CloudFront distributions and their tags..."
           aws cloudfront list-distributions --query "DistributionList.Items[*].{Id:Id, DomainName:Origins.Items[0].DomainName, Tags:Tags.Items[*]}" --output json
 
-          # If not found, try finding by exact S3 origin domain
           DISTRIBUTION_ID=$(aws cloudfront list-distributions \
-              --query "DistributionList.Items[?Origins.Items[?DomainName=='${{ secrets.AWS_S3_BUCKET_CLIENT }}.s3.eu-west-2.amazonaws.com']] | [0].Id" \
+              --query "DistributionList.Items[?Origins.Items[?DomainName=='weather-bridge-client-production.s3.eu-west-2.amazonaws.com']] | [0].Id" \
               --output text)
 
           if [ -n "$DISTRIBUTION_ID" ] && [ "$DISTRIBUTION_ID" != "None" ]; then
