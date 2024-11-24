@@ -30,8 +30,3 @@ output "client_url" {
   value       = "https://${aws_cloudfront_distribution.s3_distribution.domain_name}"
   description = "The URL of the Weather Bridge client application"
 }
-
-# output "github_actions_role_arn" {
-#   value       = aws_iam_role.github_actions.arn
-#   description = "ARN of the GitHub Actions IAM role"
-# }
