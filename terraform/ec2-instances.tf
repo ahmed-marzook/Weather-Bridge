@@ -36,5 +36,7 @@ resource "aws_instance" "app_server" {
   tags = {
     Name        = "${var.project_name}-server"
     Environment = var.environment
+    Project     = var.project_name
+    ManagedBy   = "terraform"
   }
 }
