@@ -6,7 +6,7 @@ locals {
 
 # Look up an existing SSL/TLS certificate in AWS Certificate Manager
 # IMPORTANT: Must use us-east-1 region for CloudFront compatibility
-data "aws_acm_certificate" "existing" {
+data "aws_acm_certificate" "existing_client" {
   provider    = aws.us_east_1 # Use us-east-1 region specifically for CloudFront
   domain      = local.fqdn    # The domain name on the certificate
   statuses    = ["ISSUED"]    # Only find valid certificates
@@ -103,9 +103,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   # SSL/TLS certificate configuration
   viewer_certificate {
-    acm_certificate_arn      = data.aws_acm_certificate.existing.arn # Use existing certificate
-    minimum_protocol_version = "TLSv1.2_2021"                        # Minimum TLS version
-    ssl_support_method       = "sni-only"                            # Use SNI (cheaper than dedicated IP)
+    acm_certificate_arn      = data.aws_acm_certificate.existing_client.arn # Use existing certificate
+    minimum_protocol_version = "TLSv1.2_2021"                               # Minimum TLS version
+    ssl_support_method       = "sni-only"                                   # Use SNI (cheaper than dedicated IP)
   }
 
   # Resource tagging

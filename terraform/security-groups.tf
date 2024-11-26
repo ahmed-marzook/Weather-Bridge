@@ -17,12 +17,20 @@ resource "aws_security_group" "weather_bridge_sg" {
     cidr_blocks = [var.ssh_cidr]
   }
 
-  # Redis ports with restricted access
   ingress {
     from_port   = 6379
     to_port     = 6380
     protocol    = "tcp"
     cidr_blocks = [var.vpc_cidr]
+  }
+
+  # Added HTTPS rule
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "HTTPS for ALB"
   }
 
   egress {
@@ -33,6 +41,9 @@ resource "aws_security_group" "weather_bridge_sg" {
   }
 
   tags = {
-    Name = "weather-bridge-sg"
+    Name        = "weather-bridge-sg"
+    Environment = var.environment
+    Project     = var.project_name
+    ManagedBy   = "terraform"
   }
 }

@@ -30,3 +30,11 @@ output "client_url" {
   value       = "https://${aws_cloudfront_distribution.s3_distribution.domain_name}"
   description = "The URL of the Weather Bridge client application"
 }
+
+output "application__server_summary" {
+  description = "Summary of the deployed application"
+  value = {
+    environment = var.environment
+    website_url = "https://${local.fqdn_server}"
+  }
+}

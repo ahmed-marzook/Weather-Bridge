@@ -57,3 +57,9 @@ variable "subdomain_client" {
   default     = "weather-bridge"
   description = "The subdomain for the client application"
 }
+
+variable "subdomain_server" {
+  type        = string
+  default     = "api.weather-bridge"
+  description = "The subdomain for the server application"
+}
