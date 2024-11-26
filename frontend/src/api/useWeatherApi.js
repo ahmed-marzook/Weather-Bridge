@@ -2,7 +2,7 @@ import axios, { isCancel } from "axios";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://d24s0r8wie3i2r.cloudfront.net';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 /**
  * Custom hook to fetch weather data for a given location
