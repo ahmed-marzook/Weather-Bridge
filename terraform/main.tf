@@ -14,6 +14,12 @@ provider "aws" {
   region = var.aws_region # Use a variable for the AWS region instead of hardcoding
 }
 
+# Additional provider for us-east-1 (required for ACM with CloudFront)
+provider "aws" {
+  alias  = "us_east_1"
+  region = "us-east-1"
+}
+
 # Configure the backend for storing Terraform state remotely
 terraform {
   backend "s3" {

@@ -44,3 +44,16 @@ variable "vpc_cidr" {
   type        = string
   default     = "10.0.0.0/16"
 }
+
+# Variables for domain configuration
+variable "root_domain" {
+  type        = string
+  default     = "kaizenflow.dev"
+  description = "The root domain name"
+}
+
+variable "subdomain_client" {
+  type        = string
+  default     = "weather-bridge"
+  description = "The subdomain for the client application"
+}
