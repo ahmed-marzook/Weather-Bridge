@@ -2,14 +2,13 @@ locals {
   fqdn_server = "${var.subdomain_server}.${var.root_domain}"
 }
 
-# Look up an existing SSL/TLS certificate in AWS Certificate Manager
+
 data "aws_acm_certificate" "existing_server" {
-  domain      = local.fqdn_server # The domain name on the certificate
-  statuses    = ["ISSUED"]        # Only find valid certificates
-  most_recent = true              # If multiple certificates exist, use the newest one
+  domain      = local.fqdn_server
+  statuses    = ["ISSUED"]
+  most_recent = true
 }
 
-# Create an A record for the server subdomain pointing to the ALB
 resource "aws_route53_record" "server" {
   zone_id = data.aws_route53_zone.domain.zone_id
   name    = local.fqdn_server
@@ -27,7 +26,7 @@ resource "aws_lb" "app_lb" {
   name               = "${var.project_name}-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.weather_bridge_sg.id] # Using existing security group
+  security_groups    = [aws_security_group.alb_sg.id]
   subnets            = [aws_subnet.public_a.id, aws_subnet.public_b.id]
 
   tags = {
@@ -41,7 +40,7 @@ resource "aws_lb" "app_lb" {
 # Target Group
 resource "aws_lb_target_group" "app_tg" {
   name     = "${var.project_name}-tg"
-  port     = var.app_port # Using the same port as defined in your security group
+  port     = var.app_port
   protocol = "HTTP"
   vpc_id   = aws_vpc.main.id
 
